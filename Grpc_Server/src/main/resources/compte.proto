@@ -1,0 +1,100 @@
+syntax = "proto3";
+option java_package = "ma.projet.grpc.stubs";
+option java_multiple_files = true;
+
+// Enumération pour le type de compte
+enum TypeCompte {
+  COURANT = 0;
+  EPARGNE = 1;
+}
+
+// Message représentant un compte
+message Compte {
+  int32 id = 1;
+  double solde = 2;
+  string dateCreation = 3;
+  TypeCompte type = 4;
+}
+
+// Message pour la requête de création ou mise à jour d'un compte
+message CompteRequest {
+  float solde = 1;
+  string dateCreation = 2;
+  TypeCompte type = 3;
+}
+
+// Message pour les statistiques de solde
+message SoldeStats {
+  int32 count = 1;     // Nombre total de comptes
+  float sum = 2;       // Somme des soldes
+  float average = 3;   // Moyenne des soldes
+}
+
+// Messages pour les requêtes et réponses du service
+
+// Requête pour obtenir tous les comptes
+message GetAllComptesRequest {}
+
+// Réponse contenant la liste des comptes
+message GetAllComptesResponse {
+  repeated Compte comptes = 1;
+}
+
+// Requête pour obtenir un compte par ID
+message GetCompteByIdRequest {
+  int32 id = 1;
+}
+
+// Réponse contenant le compte demandé
+message GetCompteByIdResponse {
+  Compte compte = 1;
+}
+
+// Requête pour obtenir les statistiques de solde
+message GetTotalSoldeRequest {}
+
+// Réponse contenant les statistiques de solde
+message GetTotalSoldeResponse {
+  SoldeStats stats = 1;
+}
+
+// Requête pour sauvegarder un compte (création ou mise à jour)
+message SaveCompteRequest {
+  CompteRequest compte = 1;
+}
+
+// Réponse contenant le compte sauvegardé
+message SaveCompteResponse {
+  Compte compte = 1;
+}
+
+// Requête pour mettre à jour un compte
+message UpdateCompteRequest {
+  int32 id = 1;
+  CompteRequest compte = 2;
+}
+
+// Réponse pour la mise à jour d'un compte
+message UpdateCompteResponse {
+  Compte compte = 1;
+}
+
+// Requête pour supprimer un compte
+message DeleteCompteRequest {
+  int32 id = 1;
+}
+
+// Réponse pour la suppression d'un compte
+message DeleteCompteResponse {
+  bool success = 1;
+}
+
+// Définition du service correspondant aux requêtes et mutations GraphQL
+service CompteService {
+  rpc AllComptes(GetAllComptesRequest) returns (GetAllComptesResponse);
+  rpc CompteById(GetCompteByIdRequest) returns (GetCompteByIdResponse);
+  rpc TotalSolde(GetTotalSoldeRequest) returns (GetTotalSoldeResponse);
+  rpc SaveCompte(SaveCompteRequest) returns (SaveCompteResponse);
+  rpc UpdateCompte(UpdateCompteRequest) returns (UpdateCompteResponse);
+  rpc DeleteCompte(DeleteCompteRequest) returns (DeleteCompteResponse);
+}
